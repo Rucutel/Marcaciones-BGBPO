@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marcaciones</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('fondo.jpg'); /* Ruta de la imagen de fondo */
+            background-size: cover; /* Hace que la imagen cubra todo el fondo */
+            background-position: center; /* Centra la imagen de fondo */
+            background-repeat: no-repeat; /* Evita que la imagen se repita */
+            height: 100vh; /* Asegura que el fondo cubra toda la ventana */
+            margin: 0; /* Elimina márgenes alrededor del body */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            background: rgba(255, 255, 255, 0.8); /* Fondo semitransparente */
+            border-radius: 15px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+            padding: 40px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 40px;
+            gap: 20px;
+        }
+
+        button {
+            padding: 16px 28px;
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .clockButton {
+            background-color: #007bff;
+            border: 1px solid #0056b3;
+        }
+
+        .clockButton:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .inicioBreak {
+            background-color: #ffb74d;
+            border: 1px solid #ffa000;
+        }
+
+        .inicioBreak:hover {
+            background-color: #ffa000;
+        }
+
+        .retornoBreak {
+            background-color: #66bb6a;
+            border: 1px solid #388e3c;
+        }
+
+        .retornoBreak:hover {
+            background-color: #388e3c;
+        }
+
+        .salida {
+            background-color: #ef5350;
+            border: 1px solid #c62828;
+        }
+
+        .salida:hover {
+            background-color: #c62828;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 40px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 18px;
+            text-align: center;
+            font-size: 16px;
+            color: #333;
+        }
+
+        th {
+            background-color: #007bff;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f4f4f4;
+        }
+
+        tbody tr:hover {
+            background-color: #e8f0fe;
+        }
+
+        #welcomeMessage {
+            margin: 25px 0;
+            font-size: 22px;
+            font-weight: 600;
+            text-align: center;
+            color: #333;
+        }
+
+        #warningMessage {
+            color: #ef5350;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        #logoutButton {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 14px 28px;
+            background-color: #ff4cbd;
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        #logoutButton:hover {
+            background-color: #cc0000;
+            transform: scale(1.05);
+        }
+
+        #clock {
+            text-align: center;
+            font-size: 28px;
+            margin: 25px 0;
+            color: #333;
+            font-weight: 600;
+        }
+
+        #historyButton {
+            margin-top: 20px;
+            background-color: #4caf50;
+            border: 1px solid #388e3c;
+        }
+
+        #historyButton:hover {
+            background-color: #388e3c;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Marcaciones</h1>
+        <div id="welcomeMessage"></div>
+        <div id="clock"></div>
+        <div class="button-container">
+            <!-- Botones de Marcaciones -->
+            <button id="btnIngreso" class="clockButton" onclick="registerClock('ingreso')">Ingreso</button>
+            <button id="btnInicioBreak" class="inicioBreak" onclick="registerClock('inicio_break')">Inicio Break</button>
+            <button id="btnRetornoBreak" class="retornoBreak" onclick="registerClock('retorno_break')">Retorno Break</button>
+            <button id="btnSalida" class="salida" onclick="registerClock('salida')">Salida</button>
+        </div>
+        <table id="clockTable">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Ingreso</th>
+                    <th>Inicio Break</th>
+                    <th>Retorno Break</th>
+                    <th>Salida</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- La fila de la fecha actual se agregará aquí -->
+            </tbody>
+        </table>
+        <div id="warningMessage"></div>
+        <button id="historyButton" onclick="viewHistory()">Historial de Marcaciones</button>
+    </div>
+    <button id="logoutButton" type="button" onclick="logout()">Cerrar Sesión</button>
+
+    <script>
+        const userNames = {
+            "75910244": "Ruben Cuyate",
+            "75570702": "Aaron Peñafiel",
+            "70885942": "Luis Davila",
+            "75075442": "Yerson Aliaga",
+            "47395182": "Josmel Vidal"
+        };
+
+        function loadMarcaciones() {
+            const loggedInDNI = localStorage.getItem('loggedInDNI');
+
+            if (!loggedInDNI) {
+                alert('No se ha detectado ningún usuario autenticado.');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            fetch('http://localhost/marcaciones/load_marcaciones.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ dni: loggedInDNI })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const table = document.getElementById('clockTable').getElementsByTagName('tbody')[0];
+                    table.innerHTML = '';  // Limpiar la tabla
+
+                    const today = new Date().toLocaleDateString();
+                    let rowExists = false;
+
+                    data.marcaciones.forEach(marcacion => {
+                        const newRow = table.insertRow();
+                        newRow.insertCell(0).textContent = marcacion.fecha;
+                        newRow.insertCell(1).textContent = marcacion.ingreso || '';
+                        newRow.insertCell(2).textContent = marcacion.inicio_break || '';
+                        newRow.insertCell(3).textContent = marcacion.retorno_break || '';
+                        newRow.insertCell(4).textContent = marcacion.salida || '';
+
+                        if (marcacion.fecha = today) {
+                            rowExists = true;
+                        }
+                    });
+
+                    if (!rowExists) {
+                        const newRow = table.insertRow();
+                        newRow.insertCell(0).textContent = today;
+                        newRow.insertCell(1).textContent = '';
+                        newRow.insertCell(2).textContent = '';
+                        newRow.insertCell(3).textContent = '';
+                        newRow.insertCell(4).textContent = '';
+                    }
+
+                    updateButtonState(data.marcaciones);
+                } else {
+                    document.getElementById('warningMessage').textContent = 'Error al cargar las marcaciones: ' + data.message;
+                }
+            })
+            .catch(error => {
+                document.getElementById('warningMessage').textContent = 'Error al conectar con el servidor: ' + error.message;
+            });
+        }
+
+        function registerClock(clockType) {
+    const loggedInDNI = localStorage.getItem('loggedInDNI');
+
+    if (!loggedInDNI) {
+        alert('No se ha detectado ningún usuario autenticado.');
+        window.location.href = 'index.html';
+        return;
+    }
+
+    const marcacion = {
+        dni: loggedInDNI,
+        tipo: clockType,
+        fecha: new Date().toLocaleDateString()
+    };
+
+    fetch('http://localhost/marcaciones/save_marcacion.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(marcacion)
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.text().then(text => {
+                throw new Error('Error en la respuesta del servidor: ' + text);
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            loadMarcaciones();  // Recargar marcaciones para actualizar el estado de los botones
+        } else {
+            alert('Error al guardar la marcación: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error al conectar con el servidor:', error);
+        alert('Se produjo un error al intentar guardar la marcación. Por favor, intente de nuevo.');
+    });
+}
+function updateButtonState(marcaciones) {
+    const today = new Date().toLocaleDateString();
+    const todayMarcacion = marcaciones.find(m => m.fecha === today) || {};
+
+    // Deshabilitar todos los botones inicialmente
+    const buttons = document.querySelectorAll('.button-container button');
+    buttons.forEach(button => button.disabled = true);
+
+    // Habilitar el botón de 'Ingreso' si no se ha registrado ninguna marcación para hoy
+    if (!todayMarcacion.ingreso) {
+        document.getElementById('btnIngreso').disabled = false;
+    }
+
+    // Si 'Ingreso' está marcado, habilitar 'Inicio Break' si no se ha marcado
+    if (todayMarcacion.ingreso && !todayMarcacion.inicio_break) {
+        document.getElementById('btnInicioBreak').disabled = false;
+    }
+
+    // Si 'Inicio Break' está marcado, habilitar 'Retorno Break' si no se ha marcado
+    if (todayMarcacion.inicio_break && !todayMarcacion.retorno_break) {
+        document.getElementById('btnRetornoBreak').disabled = false;
+    }
+
+    // Si 'Retorno Break' está marcado, habilitar 'Salida' si no se ha marcado
+    if (todayMarcacion.retorno_break && !todayMarcacion.salida) {
+        document.getElementById('btnSalida').disabled = false;
+    }
+
+    // Deshabilitar todos los botones si 'Salida' está marcada
+    if (todayMarcacion.salida) {
+        buttons.forEach(button => button.disabled = true);
+    }
+}
+
+        function logout() {
+            localStorage.removeItem('loggedInDNI');
+            window.location.href = "index.html";
+        }
+
+        function viewHistory() {
+            window.location.href = "historial_marcaciones.html";
+        }
+
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            document.getElementById('clock').textContent = timeString;
+        }
+
+        window.onload = function () {
+            const loggedInDNI = localStorage.getItem('loggedInDNI');
+            const workerName = userNames[loggedInDNI];
+
+            if (workerName) {
+                document.getElementById('welcomeMessage').textContent = 'Bienvenido, ' + workerName;
+                loadMarcaciones();
+            } else {
+                alert('No se ha detectado ningún usuario autenticado.');
+                window.location.href = 'index.html';
+            }
+
+            setInterval(updateClock, 1000); // Actualizar el reloj cada segundo
+        };
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Marcaciones</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('fondo.jpg'); /* Ruta de la imagen de fondo */
+            background-size: cover; /* Hace que la imagen cubra todo el fondo */
+            background-position: center; /* Centra la imagen de fondo */
+            background-repeat: no-repeat; /* Evita que la imagen se repita */
+            height: 100vh; /* Asegura que el fondo cubra toda la ventana */
+            margin: 0; /* Elimina márgenes alrededor del body */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+            padding: 40px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        h1 {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 40px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 18px;
+            text-align: center;
+            font-size: 16px;
+            color: #333;
+        }
+        th {
+            background-color: #007bff;
+            color: #fff;
+            font-weight: 700;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f4f4f4;
+        }
+        tbody tr:hover {
+            background-color: #e8f0fe;
+        }
+        #logoutButton, #backButton {
+            position: absolute;
+            padding: 14px 28px;
+            background-color: #ff4cbd;
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        #logoutButton {
+            top: 20px;
+            right: 20px;
+            background-color: #ff4cbd;
+        }
+        #logoutButton:hover {
+            background-color: #cc0000;
+            transform: scale(1.05);
+        }
+        #backButton {
+            top: 20px;
+            left: 20px;
+            background-color: #007bff;
+            font-size: 24px;
+            font-weight: normal;
+            padding: 10px;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            line-height: 30px;
+        }
+        #backButton:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button id="backButton" type="button" onclick="goBack()">←</button>
+        <h1>Historial de Marcaciones</h1>
+        <table id="historyTable">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Ingreso</th>
+                    <th>Inicio Break</th>
+                    <th>Retorno Break</th>
+                    <th>Salida</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Las marcaciones del mes actual se agregarán aquí -->
+            </tbody>
+        </table>
+        <button id="logoutButton" type="button" onclick="logout()">Cerrar Sesión</button>
+    </div>
+    <script>
+        function loadHistory() {
+            const loggedInDNI = localStorage.getItem('loggedInDNI');
+
+            fetch('http://localhost/marcaciones/load_marcaciones.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ dni: loggedInDNI })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const table = document.getElementById('historyTable').getElementsByTagName('tbody')[0];
+                    table.innerHTML = ''; // Limpiar la tabla
+                    data.marcaciones.forEach(marcacion => {
+                        const newRow = table.insertRow();
+                        newRow.insertCell(0).textContent = marcacion.fecha;
+                        newRow.insertCell(1).textContent = marcacion.ingreso || '';
+                        newRow.insertCell(2).textContent = marcacion.inicio_break || '';
+                        newRow.insertCell(3).textContent = marcacion.retorno_break || '';
+                        newRow.insertCell(4).textContent = marcacion.salida || '';
+                    });
+                } else {
+                    console.error('Error al cargar el historial:', data.message);
+                }
+            })
+            .catch(error => console.error('Error al conectar con el servidor:', error));
+        }
+
+        function logout() {
+            localStorage.removeItem('loggedInDNI');
+            window.location.href = "index.html";
+        }
+
+        function goBack() {
+            window.location.href = "marcaciones.html";
+        }
+
+        window.onload = function () {
+            loadHistory();
+        };
+    </script>
+</body>
+</html>
